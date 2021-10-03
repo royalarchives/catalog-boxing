@@ -1,5 +1,3 @@
-const fs = require('fs')
-const path = require('path')
 const puppeteer = require('puppeteer')
 const util = require('util')
 const wait = util.promisify(function (amount, callback) {
@@ -169,145 +167,6 @@ async function getContent (page) {
     }
     await wait(100)
   }
-}
-async function setCookie (page, req) {
-  const cookies = await page.cookies()
-  if (cookies.length) {
-    return
-  }
-  if (!req.session) {
-    return
-  }
-  const cookie = {
-    value: req.session.sessionid,
-    session: true,
-    name: 'sessionid',
-    url: global.dashboardServer
-  }
-  const cookie2 = {
-    value: req.session.token,
-    session: true,
-    name: 'token',
-    url: global.dashboardServer
-  }
-  while (true) {
-    try {
-      await page.setCookie(cookie)
-      break
-    } catch (error) {
-    }
-    await wait(100)
-  }
-  while (true) {
-    try {
-      await page.setCookie(cookie2)
-      return
-    } catch (error) {
-    }
-    await wait(100)
-  }
-}
-
-async function emulate (page, device) {
-  while (true) {
-    try {
-      await page.emulate(device)
-      return
-    } catch (error) {
-    }
-    await wait(100)
-  }
-}
-
-const screenshotCache = {
-}
-
-async function saveScreenshot (device, page, number, action, identifier, scriptName, overrideTitle) {
-  console.info('taking screenshot', number, action, identifier, scriptName)
-  let filePath = scriptName.substring(scriptName.indexOf('/src/www/') + '/src/www/'.length)
-  filePath = filePath.substring(0, filePath.lastIndexOf('.test.js'))
-  filePath = path.join(process.env.SCREENSHOT_PATH, filePath)
-  if (!fs.existsSync(filePath)) {
-    createFolderSync(filePath)
-  }
-  let title
-  if (identifier === '#submit-form') {
-    title = 'form'
-  } else if (identifier === '#submit-button') {
-    const element = await getElement(page, identifier)
-    let text = await getText(page, element)
-    if (text.indexOf('_') > -1) {
-      text = text.substring(0, text.indexOf('_'))
-    } else {
-      text = text.split(' ').join('-').toLowerCase()
-    }
-    title = text
-  } else if (identifier && identifier[0] === '/') {
-    const element = await getElement(page, identifier)
-    let text = await getText(page, element)
-    if (text.indexOf('_') > -1) {
-      text = text.substring(0, text.indexOf('_'))
-    } else {
-      text = text.split(' ').join('-').toLowerCase()
-    }
-    title = text
-  } else if (action === 'index') {
-    title = 'index'
-  } else if (identifier) {
-    title = 'form'
-  } else {
-    title = ''
-  }
-  let filename
-  if (overrideTitle) {
-    filename = `${number}-${action}-${overrideTitle}-${device.name.split(' ').join('-')}-${global.language}.png`.toLowerCase()
-  } else {
-    if (title) {
-      filename = `${number}-${action}-${title}-${device.name.split(' ').join('-')}-${global.language}.png`.toLowerCase()
-    } else {
-      filename = `${number}-${action}-${device.name.split(' ').join('-')}-${global.language}.png`.toLowerCase()
-    }
-  }
-  if (screenshotCache[filename]) {
-    return fs.writeFileSync(`${filePath}/${filename}`, screenshotCache[filename])
-  }
-  await page.screenshot({ path: `${filePath}/${filename}`, type: 'png' })
-  if ((number === 1 && action === 'hover') ||
-      (number === 2 && action === 'click')) {
-    screenshotCache[filename] = fs.readFileSync(`${filePath}/${filename}`)
-  }
-  return title
-}
-
-async function fillForm (page, fieldContainer, body, uploads) {
-  while (true) {
-    try {
-      await fill(page, fieldContainer, body, uploads)
-      break
-    } catch (error) {
-      await wait(100)
-    }
-  }
-}
-
-async function execute (action, page, identifier) {
-  let method
-  switch (action) {
-    case 'hover':
-      method = hoverElement
-      break
-    case 'click':
-      method = clickElement
-      break
-    case 'focus':
-      method = focusElement
-      break
-  }
-  const element = await getElement(page, identifier)
-  if (element) {
-    return method(element, page)
-  }
-  throw new Error('element not found ' + identifier)
 }
 
 async function getText (page, element) {
@@ -613,25 +472,6 @@ async function getTags (page, tag) {
   }
 }
 
-async function hoverElement (element, page) {
-  let fails = 0
-  while (true) {
-    try {
-      await element.hover()
-      return
-    } catch (error) {
-      console.error('puppeteer hoverElement error', error.toString())
-    }
-    fails++
-    if (fails > 10) {
-      const content = page ? await getContent(page) : null
-      console.error('puppeteer hoverElement fail ten times', content, global.testConfiguration, global.packageJSON)
-      throw new Error('hoverElement failed ten times')
-    }
-    await wait(100)
-  }
-}
-
 async function clickElement (element) {
   let fails = 0
   while (true) {
@@ -737,16 +577,5 @@ async function selectOption (element, value) {
       throw new Error('selectOption failed ten times')
     }
     await wait(100)
-  }
-}
-
-function createFolderSync (folderPath) {
-  const nestedParts = folderPath.split('/')
-  let nestedPath = ''
-  for (const part of nestedParts) {
-    nestedPath += `/${part}`
-    if (!fs.existsSync(nestedPath)) {
-      fs.mkdirSync(nestedPath)
-    }
   }
 }

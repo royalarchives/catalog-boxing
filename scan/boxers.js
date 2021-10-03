@@ -27,11 +27,11 @@ async function scanBoxers (matchFiles) {
       boxers.push(file.boxing.boxer2)
     }
   }
-  fs.writeFileSync(indexFilePath, JSON.stringify(boxrecIndex))  
+  fs.writeFileSync(indexFilePath, JSON.stringify(boxrecIndex))
   return boxers
 }
-    
-async function fetchBoxerInformation(date, name) {
+
+async function fetchBoxerInformation (date, name) {
   const cacheFilePath = `${process.env.DATA_PATH}/${name}.html`
   const person = {
     name
@@ -74,7 +74,7 @@ async function fetchBoxerInformation(date, name) {
   return person
 }
 
-function mapBoxRecProfiles(html) {
+function mapBoxRecProfiles (html) {
   let proboxerLinkIndex = html.indexOf('href="/en/proboxer')
   while (proboxerLinkIndex > -1) {
     html = html.substring(proboxerLinkIndex)
@@ -99,7 +99,7 @@ function mapBoxRecProfiles(html) {
   }
 }
 
-async function findBoxRecURL(name, specifyBoxer) {
+async function findBoxRecURL (name, specifyBoxer) {
   for (const keyName in boxrecIndex) {
     if (
       // first last
@@ -142,7 +142,7 @@ async function findBoxRecURL(name, specifyBoxer) {
         boxrecURL = wikipediaPage.html.substring(boxerURLIndex)
         boxrecURL = boxrecURL.substring(0, boxrecURL.indexOf('"'))
       }
-    }    
+    }
     console.log('found boxrecurl', boxrecURL)
   }
   if (!boxrecURL) {
@@ -157,7 +157,6 @@ async function findBoxRecURL(name, specifyBoxer) {
     }
     const duckduckgoPage = await puppeteer.fetch('GET', duckduckgoRequest, true)
     const proBoxerURLIndex = duckduckgoPage.html.indexOf('https://boxrec.com/en/proboxer/')
-    let boxrecURL
     if (proBoxerURLIndex > -1) {
       boxrecURL = duckduckgoPage.html.substring(proBoxerURLIndex)
     } else {

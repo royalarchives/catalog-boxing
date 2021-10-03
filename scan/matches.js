@@ -9,17 +9,17 @@ async function scan (matchFiles) {
     const matchInformation = parseMatchInformation(file.boxing.date, file.boxing.boxer1, file.boxing.boxer2)
     if (matchInformation) {
       for (const key in matchInformation) {
-        match[key] = matchInformation[key]
+        file.boxing[key] = matchInformation[key]
       }
     }
   }
 }
-    
-function doubleDigit(n) {
+
+function doubleDigit (n) {
   return n < 10 ? `0${n}` : n.toString()
 }
 
-function parseMatchInformation(date, boxer1, boxer2, modified) {
+function parseMatchInformation (date, boxer1, boxer2, modified) {
   const cacheFilePath = `${process.env.DATA_PATH}/${boxer1.name.toLowerCase()}.html`
   if (!fs.existsSync(cacheFilePath)) {
     return undefined

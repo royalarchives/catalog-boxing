@@ -1,4 +1,4 @@
-const filenameWords = [ 'darksport', 'sample', 'punch[eztv]', 'mkv', 'mp4', 'msd[eztv]', 'hdtv', 'ppv', 'msd', 'punch', 'plutonium', 'verum', 'web', '[tgx]', 'megusta', 'ali', 'full', 'card', 'hevc', 'aac', 'h264', 'x265', 'x264', '480p', '720p', '1080p' ]
+const filenameWords = ['darksport', 'sample', 'punch[eztv]', 'mkv', 'mp4', 'msd[eztv]', 'hdtv', 'ppv', 'msd', 'punch', 'plutonium', 'verum', 'web', '[tgx]', 'megusta', 'ali', 'full', 'card', 'hevc', 'aac', 'h264', 'x265', 'x264', '480p', '720p', '1080p']
 const spellingFixes = {
   'derek chisora': 'dereck chisora',
   'samuel vegas': 'samuel vargas',
@@ -30,7 +30,7 @@ async function scanFiles (files, matches) {
     }
     // try and extract a date
     let date
-    for (let year=1800, len = new Date().getFullYear() + 1; year < len; year++) {
+    for (let year = 1800, len = new Date().getFullYear() + 1; year < len; year++) {
       const nameIndex = name.indexOf(year)
       if (nameIndex === -1) {
         continue
