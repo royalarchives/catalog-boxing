@@ -33,5 +33,6 @@ jobs:
       uses: JS-DevTools/npm-publish@v1
       with:
         token: ${{ secrets.NPM_AUTOMATION_TOKEN }}
+        access: public
     - name: Push changes to Github
       run: git push origin master
