@@ -18,6 +18,7 @@
     "puppeteer": "^10.4.0"
   },
   "royalArchives": {
+    "type": "catalog",
     "description": "Identifies boxing matches and adds supplemental data to your archives",
     "icon": "video"
   },
