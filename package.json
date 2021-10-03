@@ -1,5 +1,6 @@
 {
   "name": "@royalarchives/catalog-boxing",
+  "private": false,
   "version": "1.0.0",
   "description": "Scans archives in your catalog for sanctioned boxing matches",
   "main": "index.js",
