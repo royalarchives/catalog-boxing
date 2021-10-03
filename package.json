@@ -1,0 +1,26 @@
+{
+  "name": "@royalarchives/catalog-boxing",
+  "version": "1.0.0",
+  "description": "Scans archives in your catalog for sanctioned boxing matches",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/royalarchives/catalog-boxing"
+  },
+  "author": {
+    "name": "server",
+    "email": "serverproject@protonmail.com",
+    "url": "http://github.com/royalarchives"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^10.4.0"
+  },
+  "royalArchives": {
+    "description": "Identifies boxing matches and adds supplemental data to your archives",
+    "icon": "video"
+  },
+  "devDependencies": {
+    "@royalarchives/catalog": "^1.0.35"
+  }
+}
